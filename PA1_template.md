@@ -10,7 +10,8 @@ output:
 
 The missing values in the datase are ignored
 
-```{r}
+
+```r
 activitydata <- read.csv("data/activity.csv", colClasses = c("numeric", "character", "numeric"))
 notnatotalstepsperday <- activitydata[!is.na(activitydata$steps),]
 totalstepsperday <- aggregate(x=notnatotalstepsperday["steps"], by=list(date=notnatotalstepsperday$date), sum)
@@ -18,13 +19,27 @@ hist(totalstepsperday$steps, col = "green", breaks = 10, main =
     "Histogram of total number of steps taken per day", xlab = "Total number of steps taken per day")
 ```
 
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png)
+
 ## What is mean total number of steps taken per day?
 
 The mean and median total number of steps taken per day are calculated.
 
-```{r}
+
+```r
 mean(totalstepsperday$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(totalstepsperday$steps)
+```
+
+```
+## [1] 10765
 ```
 
 The mean total number of steps taken per day is 10766.19 and the median total number of steps taken per day is 10765.
@@ -38,7 +53,8 @@ The 5-minute interval, on average across all the days in the dataset, contains t
 steps, is calculated and indicated by a vertical line.
 
 
-```{r}
+
+```r
 averagestepsper5minuteinterval <- aggregate(x=notnatotalstepsperday["steps"], 
     by=list(interval=notnatotalstepsperday$interval), mean)
 plot(averagestepsper5minuteinterval$interval, averagestepsper5minuteinterval$steps, 
@@ -46,9 +62,18 @@ plot(averagestepsper5minuteinterval$interval, averagestepsper5minuteinterval$ste
 	ylab = "average steps per 5 minutes interval", main = "average daily activity pattern")
 averagestepsper5minuteinterval[averagestepsper5minuteinterval$steps==
     max(averagestepsper5minuteinterval$steps),1]
+```
+
+```
+## [1] 835
+```
+
+```r
 abline(v=averagestepsper5minuteinterval[averagestepsper5minuteinterval$steps==
     max(averagestepsper5minuteinterval$steps),1], lwd = 2)
 ```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 The 5 minutes interval at 8:35 am contains the maximum number of 
 steps on average across all the days in the dataset.
@@ -63,8 +88,16 @@ of 5 minute intervals over all days
 A histogram of the total number of steps taken each day is shown 
 and the mean and median total number of steps taken per day is calculated.
 
-```{r}
+
+```r
 sum(is.na(activitydata$steps))
+```
+
+```
+## [1] 2304
+```
+
+```r
 natotalstepsperday <- activitydata[is.na(activitydata$steps),]
 for (i in 1:length(natotalstepsperday[,1])) {
 	for (j in 1:length(averagestepsper5minuteinterval[,1])) {
@@ -78,8 +111,24 @@ activitydata2 <- rbind(notnatotalstepsperday,natotalstepsperday)
 totalstepsperday2 <- aggregate(x=activitydata2["steps"], by=list(date=activitydata2$date), sum)
 hist(totalstepsperday2$steps, col = "green", breaks = 10, main = "Histogram of total number of 
     steps taken per day", xlab = "Total number of steps taken per day")
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+
+```r
 mean(totalstepsperday2$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(totalstepsperday2$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 The total number of missing values in the dataset is 2304.
@@ -98,7 +147,8 @@ A new factor variable in the dataset with two levels -- "weekday" and "weekend" 
 A panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) 
 and the average number of steps taken, averaged across all weekday days or weekend days (y-axis) is maked.
 
-```{r}
+
+```r
 fday = factor (c("weekday","weekend"))
 weekproperty <- function(day) {
 	if (day == "Montag" | day =="Dienstag" | day == "Mittwoch" | day == "Donnerstag" | day == "Freitag") {
@@ -120,6 +170,8 @@ with(subset(averagestepsper5minuteinterval2, fday == "weekend"), points(interval
 type = "l", col = "red"))
 legend("topright", pch = 1, col = c("blue", "red"), legend = c("weekday", "weekend"))
 ```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
 
 There is a differences in activity patterns between weekdays and weekends. At weekend the activity starts later and
 it is not so extreme high in the morning as on weekdays.
