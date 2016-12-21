@@ -60,6 +60,14 @@ averagestepsper5minuteinterval <- aggregate(x=notnatotalstepsperday["steps"],
 plot(averagestepsper5minuteinterval$interval, averagestepsper5minuteinterval$steps, 
     type = "l", xlab="interval 0 - 2355 (00:00am to 11:55pm)", 
 	ylab = "average steps per 5 minutes interval", main = "average daily activity pattern")
+max(averagestepsper5minuteinterval$steps)
+```
+
+```
+## [1] 206.1698
+```
+
+```r
 averagestepsper5minuteinterval[averagestepsper5minuteinterval$steps==
     max(averagestepsper5minuteinterval$steps),1]
 ```
@@ -69,14 +77,15 @@ averagestepsper5minuteinterval[averagestepsper5minuteinterval$steps==
 ```
 
 ```r
+abline(h=max(averagestepsper5minuteinterval$steps), lwd = 1, lty = 2)
 abline(v=averagestepsper5minuteinterval[averagestepsper5minuteinterval$steps==
-    max(averagestepsper5minuteinterval$steps),1], lwd = 2)
+    max(averagestepsper5minuteinterval$steps),1], lwd = 2, lty = 2)
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
-The 5 minutes interval at 8:35 am contains the maximum number of 
-steps on average across all the days in the dataset.
+The 5 minutes interval 835 (that means 8:35 am in the morning) contains the maximum number of 
+steps (206.1698) on average across all the days in the dataset.
 
 ## Imputing missing values
 
@@ -110,7 +119,7 @@ for (i in 1:length(natotalstepsperday[,1])) {
 activitydata2 <- rbind(notnatotalstepsperday,natotalstepsperday)
 totalstepsperday2 <- aggregate(x=activitydata2["steps"], by=list(date=activitydata2$date), sum)
 hist(totalstepsperday2$steps, col = "green", breaks = 10, main = "Histogram of total number of 
-    steps taken per day", xlab = "Total number of steps taken per day")
+    steps taken per day imputing missing data", xlab = "Total number of steps taken per day")
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
@@ -137,7 +146,7 @@ The impact is, that now there are 8 more days with total daily number of steps.
 There are more counts of total steps at the middle of the plot. 
 
 The mean total number of steps taken per day does not differ from the first part of the assignment.
-The median total number is little bit higher, closer to the mean. 
+The median total number is little bit higher, closer to the mean (or exactly equal the mean). 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -164,11 +173,8 @@ for (i in 1:length(activitydata2[,1])) {
 }
 
 averagestepsper5minuteinterval2 <- aggregate(x=activitydata2["steps"], by=list(interval=activitydata2$interval, fday=activitydata2$fday), mean)
-with(subset(averagestepsper5minuteinterval2, fday == "weekday"), plot(interval, steps, main = "",
-type = "l", col = "blue"))
-with(subset(averagestepsper5minuteinterval2, fday == "weekend"), points(interval, steps, main = "",
-type = "l", col = "red"))
-legend("topright", pch = 1, col = c("blue", "red"), legend = c("weekday", "weekend"))
+library(lattice)
+xyplot(steps ~ interval | fday, data = averagestepsper5minuteinterval2, layout = c(1, 2), type = "l", xlab="Interval", ylab="Number of steps")
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
